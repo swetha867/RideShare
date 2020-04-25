@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import { connect } from "react-redux";
+import "./App.css";
+import "./rideShare.css";
 
-function App() {
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import RiderHomeScreen from "./pages/RiderHomeScreen";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import { Redirect } from "react-router-dom";
+
+import { setIsLoggedIn } from "./redux/actions/userActions";
+const App = (isLoggedIn) => {
+  const authenticated = isLoggedIn.isLoggedIn;
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <div className="nav-bar">
+          {!authenticated && (
+            <div class="pill-nav">
+                <Link   to="/login">Login</Link>
+                <Link to="/signUp">Signup</Link>
+            </div>
+          )}
+          {authenticated && (
+            <div>
+              <Link to="/RiderHomeScreen">Home</Link>
+            </div>
+          )}
+        </div>
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Route path="/signUp" component={Signup} />
+          <Route path="/RiderHomeScreen" component={RiderHomeScreen} />
+        </Switch>
+      </Router>
     </div>
   );
-}
-
-export default App;
+};
+const mapStateToProps = (state) => {
+  return {
+    isLoggedIn: state.userReducer.isLoggedIn,
+  };
+};
+export default connect(mapStateToProps)(App);

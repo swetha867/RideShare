@@ -1,0 +1,95 @@
+form {
+  border: 3px solid #f1f1f1;
+}
+
+/* Full-width inputs */
+input[type=text], input[type=password] {
+  width: 40%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 40%;
+}
+
+/* Add a hover effect for buttons */
+button:hover {
+  opacity: 0.8;
+}
+
+
+
+
+/* Add padding to containers */
+.container {
+  padding: 1px;
+}
+
+/* The "Forgot password" text */
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+    display: block;
+    float: none;
+  }
+  .cancelbtn {
+    width: 100%;
+  }
+}
+.pill-nav a {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  font-size: 17px;
+  border-radius: 5px;
+  border-color: #4CAF50;
+
+}
+
+/* Change the color of links on mouse-over */
+.pill-nav a:hover {
+  background-color: rgb(85, 119, 86);
+  color: black;
+}
+button .logout {
+  background-color:white;
+  font-size:24px;
+  align-items: right;
+  width: 10%;
+}
+.isa_success,  .isa_error {
+  margin: 10px 0px;
+  padding:12px;
+   
+  }
+  
+  .isa_success {
+      color: #4F8A10;
+  }
+ 
+  .isa_error {
+      color: #D8000C;
+  }
+ .isa_success i , .isa_error i {
+      margin:10px 22px;
+      font-size:2em;
+      vertical-align:middle;
+  }
