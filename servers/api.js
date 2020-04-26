@@ -22,10 +22,10 @@ con.connect(function (err) {
 
   app.post("/api/auth/DriverCreate", (req, res) => {
     console.log(req.body);
-    const { did, dname, lic_no, Driver_contact } = req.body;
+    const { dname, lic_no, Driver_contact, DuserName, Dpassword } = req.body;
     let sql =
-      "INSERT INTO driver (did, dname, lic_no, Driver_contact) VALUES (";
-    let values = sql + `${did}, '${dname}', '${lic_no}', '${Driver_contact}')`;
+      "INSERT INTO driver (dname, lic_no, Driver_contact, Dusername, Dpassword) VALUES (";
+    let values = sql + `'${dname}', '${lic_no}', '${Driver_contact}', '${DuserName}', '${Dpassword}')`;
     console.log(values);
     con.query(values, (err, result) => {
       if (err) {
@@ -40,10 +40,10 @@ con.connect(function (err) {
 
   app.post("/api/auth/RiderCreate", (req, res) => {
     console.log(req.body);
-    const { rid, Rname, Rider_contact } = req.body;
+    const { RuserName, Rpassword, Rname, Rider_contact } = req.body;
     let sql =
-      "INSERT INTO rider (rid, Rname, Rider_contact) VALUES (";
-    let values = sql + `${rid}, '${Rname}', '${Rider_contact}')`;
+      "INSERT INTO rider (Rusername, Rpassword, Rname, Rider_contact) VALUES (";
+    let values = sql + `'${RuserName}', '${Rpassword}', '${Rname}', '${Rider_contact}')`;
     console.log(values);
     con.query(values, (err, result) => {
       if (err) {

@@ -5,7 +5,8 @@ import "../rideShare.css";
 import "../App.css";
 import { setLoadingState } from "../redux/actions/userActions";
 const Signup = ({ loadingState, dispatch }) => {
-  const [did, setDid] = React.useState("");
+  const [DuserName, setUser] = React.useState("");
+  const [Dpassword, setPassword] = React.useState("");
   const [lic_no, setLicNo] = React.useState("");
   const [dname, setDname] = React.useState("");
   const [Driver_contact, setContact] = React.useState("");
@@ -15,7 +16,8 @@ const Signup = ({ loadingState, dispatch }) => {
   const handleSignUp = () => {
     //  dispatch(setLoadingState("loading"));
     const userData = {
-      did,
+      DuserName,
+      Dpassword,
       dname,
       lic_no,
       Driver_contact,
@@ -47,10 +49,19 @@ const Signup = ({ loadingState, dispatch }) => {
       <div id="signup">
         <input
           type="text"
-          value={did}
-          id="last"
-          placeholder="did"
-          onChange={(e) => setDid(e.target.value)}
+          value={DuserName}
+          id="user"
+          placeholder="username"
+          onChange={(e) => setUser(e.target.value)}
+        />
+      </div>
+      <div id="password">
+        <input
+          type="password"
+          value={Dpassword}
+          id="password"
+          placeholder="password"
+          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <div>

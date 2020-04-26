@@ -5,6 +5,8 @@ import "../rideShare.css";
 import "../App.css";
 import { setLoadingState } from "../redux/actions/userActions";
 const Signup = ({ loadingState, dispatch }) => {
+  const [RuserName, setUser] = React.useState("");
+  const [Rpassword, setPassword] = React.useState("");
   const [rid, setRid] = React.useState("");
   const [Rname, setRname] = React.useState("");
   const [Rider_contact, setContact] = React.useState("");
@@ -14,7 +16,7 @@ const Signup = ({ loadingState, dispatch }) => {
   const handleSignUp = () => {
     //  dispatch(setLoadingState("loading"));
     const userData = {
-      rid, Rname, Rider_contact
+      rid, Rname, Rider_contact, RuserName, Rpassword
     };
     //var headers = { 'Content-Type': 'application/json' }
     axios
@@ -39,13 +41,22 @@ const Signup = ({ loadingState, dispatch }) => {
     <div className="container">
       <h1>Register</h1>
       <p>Please fill in this form to create Rider account.</p>
-      <div id="signup">
+      <div id="user">
         <input
           type="text"
-          value={rid}
-          id="rid"
-          placeholder="rid"
-          onChange={(e) => setRid(e.target.value)}
+          value={RuserName}
+          id="user"
+          placeholder="username"
+          onChange={(e) => setUser(e.target.value)}
+        />
+      </div>
+      <div id="password">
+        <input
+          type="password"
+          value={Rpassword}
+          id="password"
+          placeholder="password"
+          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <div>
