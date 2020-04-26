@@ -5,31 +5,30 @@ import "../rideShare.css";
 import "../App.css";
 import { setLoadingState } from "../redux/actions/userActions";
 const Signup = ({ loadingState, dispatch }) => {
-  const [userName, setUserName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [RuserName, setUser] = React.useState("");
+  const [Rpassword, setPassword] = React.useState("");
+  const [rid, setRid] = React.useState("");
+  const [Rname, setRname] = React.useState("");
+  const [Rider_contact, setContact] = React.useState("");
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [responseMessage, setResponseMessage] = React.useState(false);
 
   const handleSignUp = () => {
     //  dispatch(setLoadingState("loading"));
     const userData = {
-      userName,
-      email,
-      password,
+      rid, Rname, Rider_contact, RuserName, Rpassword
     };
     //var headers = { 'Content-Type': 'application/json' }
     axios
-      .post("/api/auth/create", { userData })
+      .post("/api/auth/RiderCreate", userData)
       .then(function (response) {
         dispatch(setLoadingState("init"));
 
-        if (response.data === "OK") {
+        if (response.data.valid) {
           setResponseMessage(true);
           setIsErrorMessage(false);
         } else {
           setResponseMessage(false);
-
           setIsErrorMessage(true);
         }
       })
@@ -42,31 +41,40 @@ const Signup = ({ loadingState, dispatch }) => {
     <div className="container">
       <h1>Register</h1>
       <p>Please fill in this form to create Rider account.</p>
-      <div id="signup">
+      <div id="user">
         <input
           type="text"
-          value={userName}
-          id="last"
-          placeholder="userName"
-          onChange={(e) => setUserName(e.target.value)}
+          value={RuserName}
+          id="user"
+          placeholder="username"
+          onChange={(e) => setUser(e.target.value)}
         />
       </div>
-      <div>
-        <input
-          type="text"
-          id="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div>
+      <div id="password">
         <input
           type="password"
-          value={password}
+          value={Rpassword}
           id="password"
-          placeholder="Password"
+          placeholder="password"
           onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          id="rname"
+          placeholder="name"
+          value={Rname}
+          onChange={(e) => setRname(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          value={Rider_contact}
+          id="contact"
+          placeholder="Contact"
+          onChange={(e) => setContact(e.target.value)}
         />
       </div>
       <div>
@@ -74,10 +82,10 @@ const Signup = ({ loadingState, dispatch }) => {
           SignUp
         </button>
       </div>
-      <div class="isa_error">
+      <div className="isa_error">
         {isErrorMessage && <b> UserName or email is already taken</b>}
       </div>
-      <div class="isa_success">
+      <div className="isa_success">
         {responseMessage && <b> Your Account is created . Please Login</b>}
       </div>
     </div>

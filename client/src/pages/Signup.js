@@ -13,7 +13,7 @@ const Signup = () => {
     <div className="App">
       <Router>
         <div className="nav-bar">
-            <div class="pill-nav">
+            <div className="pill-nav">
                 <Link   to="/RiderSignup">Rider Registration</Link>
                 <Link to="/DriverSignup">Driver Registration</Link>
             </div>

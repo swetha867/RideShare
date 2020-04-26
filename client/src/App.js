@@ -18,7 +18,7 @@ const App = (isLoggedIn) => {
       <Router>
         <div className="nav-bar">
           {!authenticated && (
-            <div class="pill-nav">
+            <div className="pill-nav">
                 <Link   to="/login">Login</Link>
                 <Link to="/signUp">Signup</Link>
             </div>

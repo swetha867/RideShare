@@ -1,49 +1,68 @@
 const express = require("express");
-var mysql = require('mysql');
+var mysql = require("mysql");
 const app = express();
 const axios = require("axios");
-const port = 3005;
+const port = 5000;
 
 app.use(express.json());
 
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "password",
-  database: "rideshare"
-
+  password: "Login@12345",
+  database: "Final_project",
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
   if (err) throw err;
-  if (err) {
-    console.log(err);
-    process.exit(1);
-  }
-  console.log("Connected!");
-  
+  // if (err) {
+  //   console.log(err);
+  //   process.exit(1);
+  // }
 
+  app.post("/api/auth/DriverCreate", (req, res) => {
+    console.log(req.body);
+    const { dname, lic_no, Driver_contact, DuserName, Dpassword } = req.body;
+    let sql =
+      "INSERT INTO driver (dname, lic_no, Driver_contact, Dusername, Dpassword) VALUES (";
+    let values = sql + `'${dname}', '${lic_no}', '${Driver_contact}', '${DuserName}', '${Dpassword}')`;
+    console.log(values);
+    con.query(values, (err, result) => {
+      if (err) {
+        console.log("error");
+        res.send({ valid: false });
+      } else {
+        console.log("row inserted");
+        res.send({ valid: true });
+      }
+    });
+  });
 
-  app.use((req, res, next) => {
-    //logging the endpoint url
-    console.log("original url " + req.originalUrl);
-    next();
+  app.post("/api/auth/RiderCreate", (req, res) => {
+    console.log(req.body);
+    const { RuserName, Rpassword, Rname, Rider_contact } = req.body;
+    let sql =
+      "INSERT INTO rider (Rusername, Rpassword, Rname, Rider_contact) VALUES (";
+    let values = sql + `'${RuserName}', '${Rpassword}', '${Rname}', '${Rider_contact}')`;
+    console.log(values);
+    con.query(values, (err, result) => {
+      if (err) {
+        console.log("error");
+        res.send({ valid: false });
+      } else {
+        console.log("row inserted");
+        res.send({ valid: true });
+      }
+    });
   });
-  app.post("/api/auth/create", (req, res) => {
-    console.log(req.headers);
-    console.log("AuthService server", req.body.userData);
-    const { userName, email, password, } = req.body.userData;
-    var sql = "INSERT INTO RIDER (userName,email, password) VALUES ?";
-    var values = 
-      [userName, email,password];
-    con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
+
   app.post("/api/auth/authenticate", (req, res) => {
-
-    
-  });
+    const { userName, password } = req.body;
+    con.query("select did from driver", (err, result) => {
+      if (err) console.log(err);
+      let did = result;
+      console.log(did);
+    });
   });
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 });
