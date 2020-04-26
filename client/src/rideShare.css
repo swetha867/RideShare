@@ -93,3 +93,12 @@ button .logout {
       font-size:2em;
       vertical-align:middle;
   }
+  select {
+    background-image:none\9;
+    width: 40%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}

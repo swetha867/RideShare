@@ -43,14 +43,13 @@ const Login = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
   return (
     <div className="container">
       <h2>Login</h2>
-      <div>
-        <label>
-          Select your role:
-          <select onChange={(e) => dispatch(setRole(e.target.value))}>
+      <div class="select">
+          <select   onChange={(e) => setRole(e.target.value)}>
+          <option value="0">Select Role</option>
+
             <option value="Driver">Driver</option>
             <option value="Rider">Rider</option>
           </select>
-        </label>
       </div>
       <div>
         <input

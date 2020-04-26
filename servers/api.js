@@ -9,8 +9,8 @@ app.use(express.json());
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Login@12345",
-  database: "Final_project",
+  password: "password",
+  database: "rideshare",
 });
 
 con.connect(function (err) {
@@ -43,24 +43,26 @@ con.connect(function (err) {
     const { RuserName, Rpassword, Rname, Rider_contact } = req.body;
     let sql =
       "INSERT INTO rider (Rusername, Rpassword, Rname, Rider_contact) VALUES (";
-    let values = sql + `'${RuserName}', '${Rpassword}', '${Rname}', '${Rider_contact}')`;
-    console.log(values);
-    con.query(values, (err, result) => {
-      if (err) {
-        console.log("error");
-        res.send({ valid: false });
-      } else {
-        console.log("row inserted");
-        res.send({ valid: true });
+    let sqlQuery = sql + `'${RuserName}', '${Rpassword}', '${Rname}', '${Rider_contact}')`;
+    console.log(sqlQuery);
+    con.query(sqlQuery,(error, results, fields) => {
+      if (error) {
+        console.error('An error occurred while executing the query')
+        throw error
       }
+      console.log("row inserted");
+      res.send({ valid: true });
+      
     });
   });
 
   app.post("/api/auth/authenticate", (req, res) => {
     const { userName, password } = req.body;
-    con.query("select did from driver", (err, result) => {
+    con.query("select userName, password from driver", (err, result) => {
       if (err) console.log(err);
-      let did = result;
+      if(result.length==0){
+
+      }
       console.log(did);
     });
   });

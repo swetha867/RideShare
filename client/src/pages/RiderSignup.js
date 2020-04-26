@@ -16,7 +16,7 @@ const Signup = ({ loadingState, dispatch }) => {
   const handleSignUp = () => {
     //  dispatch(setLoadingState("loading"));
     const userData = {
-      rid, Rname, Rider_contact, RuserName, Rpassword
+       Rname, Rider_contact, RuserName, Rpassword
     };
     //var headers = { 'Content-Type': 'application/json' }
     axios
@@ -73,7 +73,7 @@ const Signup = ({ loadingState, dispatch }) => {
           type="text"
           value={Rider_contact}
           id="contact"
-          placeholder="Contact"
+          placeholder="Contact Number"
           onChange={(e) => setContact(e.target.value)}
         />
       </div>
