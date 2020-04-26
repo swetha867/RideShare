@@ -10,7 +10,6 @@ import {
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 
-
 const Login = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [role, setRole] = React.useState("");
@@ -21,21 +20,20 @@ const Login = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
       password,
     };
     dispatch(setLoadingState("loading"));
-    
-      axios
-        .post("/api/auth/authenticate", { loginData })
-        .then(function (response) {
-          setLoadingState(false);
 
-          if (response.data.status === "OK") {
-            dispatch(setIsLoggedIn(true));
-            dispatch(setLoadingState("init"));
-          } else {
-            setIsErrorMessage(true);
-            dispatch(setIsLoggedIn(false));
-          }
-        });
-    
+    axios
+      .post("/api/auth/authenticate", { loginData })
+      .then(function (response) {
+        setLoadingState(false);
+
+        if (response.data.status === "OK") {
+          dispatch(setIsLoggedIn(true));
+          dispatch(setLoadingState("init"));
+        } else {
+          setIsErrorMessage(true);
+          dispatch(setIsLoggedIn(false));
+        }
+      });
   };
   if (isLoggedIn) {
     return <Redirect to="Home" />;
@@ -43,34 +41,45 @@ const Login = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
 
   //const [user ,setUser]=React.useState('');
   return (
-    <div class="container">
-    <h2>Login</h2>
-    <div>
-    <label>
+    <div className="container">
+      <h2>Login</h2>
+      <div>
+        <label>
           Select your role:
-          <select  oonChange={(e) => dispatch(setRole(e.target.value))}>
+          <select onChange={(e) => dispatch(setRole(e.target.value))}>
             <option value="Driver">Driver</option>
             <option value="Rider">Rider</option>
-            
           </select>
         </label>
-        </div>
-      <div>
-    <input type="text"   value={user} id="email" placeholder="Email"
-          onChange={(e) => dispatch(setUser(e.target.value))} placeholder="Enter Email" name="uname" required/>
-      
       </div>
       <div>
         <input
-          type="password" id="password" placeholder="Password"
+          type="text"
+          value={user}
+          id="email"
+          placeholder="Email"
+          onChange={(e) => dispatch(setUser(e.target.value))}
+          placeholder="Enter Email"
+          name="uname"
+          required
+        />
+      </div>
+      <div>
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
           value={password}
           onChange={(e) => dispatch(setPassword(e.target.value))}
         />
       </div>
       <div>
-        <button  onClick={handleLogIn} id="login"> Log in</button>
+        <button onClick={handleLogIn} id="login">
+          {" "}
+          Log in
+        </button>
       </div>
-      <div class="isa_error">
+      <div className="isa_error">
         {isErrorMessage && <b> Email or Password is incorrect</b>}
       </div>
     </div>
