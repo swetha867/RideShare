@@ -15,7 +15,9 @@ const Signup = ({ loadingState, dispatch }) => {
 
   const handleSignUp = () => {
     //  dispatch(setLoadingState("loading"));
+   const role='driver';
     const userData = {
+      role,
       DuserName,
       Dpassword,
       dname,
@@ -24,7 +26,7 @@ const Signup = ({ loadingState, dispatch }) => {
     };
     //var headers = { 'Content-Type': 'application/json' }
     axios
-      .post("/api/auth/DriverCreate", userData)
+      .post("/api/auth/Create", userData)
       .then((response) => {
         dispatch(setLoadingState("init"));
         console.log(response);

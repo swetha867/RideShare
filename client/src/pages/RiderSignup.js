@@ -15,12 +15,13 @@ const Signup = ({ loadingState, dispatch }) => {
 
   const handleSignUp = () => {
     //  dispatch(setLoadingState("loading"));
+   const role='rider';
     const userData = {
-       Rname, Rider_contact, RuserName, Rpassword
+      role, Rname, Rider_contact, RuserName, Rpassword
     };
     //var headers = { 'Content-Type': 'application/json' }
     axios
-      .post("/api/auth/RiderCreate", userData)
+      .post("/api/auth/Create", userData)
       .then(function (response) {
         dispatch(setLoadingState("init"));
 

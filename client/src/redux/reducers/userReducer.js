@@ -4,8 +4,8 @@ password:'',
 isLoggedIn:false,
 loadingState:'init',
 email:'',
-note: '',
-noteList: ''
+isDriver:false,
+isRider:false,
 };
 
 const userReducer =(state = INITIAL_STATE,action) =>{
@@ -34,18 +34,18 @@ const userReducer =(state = INITIAL_STATE,action) =>{
             return{
                 ...state,
                 loadingState: action.loadingState,
-            }
-            case 'USER_SAVE_NOTE':
+            };
+            case 'USER_SET_IS_DRIVER':
             return{
                 ...state,
-                loadingState: action.note,
-
-            }
-            case 'USER_SHOW_NOTE_LIST':
+                isDriver: action.isDriver,
+            };
+            case 'USER_SET_IS_RIDER':
             return{
                 ...state,
-                loadingState: action.noteList,
-            }
+                isRider: action.isRider,
+            };
+           
         default:
             return state;
     }
