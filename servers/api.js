@@ -144,5 +144,19 @@ con.connect(function (err) {
     });
   });
 
+  app.post("/api/showRides", (req,res) => {
+    let rides = "select from_location from trip;"
+    con.query(rides, (err, res1) => {
+      if(err){
+        console.log("error");
+        res.send({status:false});
+      }
+      else{
+        console.log(res1);
+        res.send({status: true, result: res1});
+      }
+    })
+  })
+
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 });

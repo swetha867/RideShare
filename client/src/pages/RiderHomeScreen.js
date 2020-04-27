@@ -36,8 +36,10 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
       .then((res) => {
         if (res.data.status) {
           console.log("ride is posted");
+          setResponseMessage("Ride is posted");
         } else {
           console.log("ride not posted");
+          setResponseMessage("Ride is not posted");
         }
       })
       .catch((e) => {
@@ -74,7 +76,7 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
 
   return (
     //if user is logged in, logout button appears in homepage and their notes are visible
-    <div class="container">
+    <div className="container">
       {isLoggedIn && (
         <div>
           <h2> Post your Ride</h2>
@@ -104,7 +106,7 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
 
           <div>{responseMessage}</div>
           {isLoggedIn && (
-            <div class="logout">
+            <div className="logout">
               <button onClick={handleLogout}>Logout</button>
             </div>
           )}
