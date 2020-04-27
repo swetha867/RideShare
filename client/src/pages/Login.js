@@ -6,60 +6,82 @@ import {
   setPassword,
   setIsLoggedIn,
   setLoadingState,
+  setIsDriver,
+  setIsRider,
 } from "../redux/actions/userActions";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 
-const Login = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
+const Login = ({ user, password, isLoggedIn, loadingState, isDriver, isRider, dispatch }) => {
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [role, setRole] = React.useState("");
+  const [roleValidate, setRoleValidate] = React.useState("");
 
   const handleLogIn = () => {
-    const loginData = {
-      user,
-      password,
-    };
-    dispatch(setLoadingState("loading"));
+    /*if (role != "rider" || role != "driver") {
+      setRoleValidate("Please select role");
+      setIsErrorMessage(true);
 
-    axios
-      .post("/api/auth/authenticate", { loginData })
-      .then(function (response) {
-        setLoadingState(false);
+    } else {*/
+      if(role === "driver"){
+        dispatch(setIsDriver(true));
+        dispatch(setIsRider(false));
 
-        if (response.data.status === "OK") {
-          dispatch(setIsLoggedIn(true));
-          dispatch(setLoadingState("init"));
-        } else {
-          setIsErrorMessage(true);
-          dispatch(setIsLoggedIn(false));
-        }
-      });
+      }
+      else{
+        dispatch(setIsRider(true));
+        dispatch(setIsDriver(false));
+      }
+      setRoleValidate("");
+      setIsErrorMessage(false);
+      const loginData = {
+        role,
+        user,
+        password,
+      };
+     
+      dispatch(setLoadingState("loading"));
+      axios
+        .post("/api/auth/authenticate", { loginData })
+        .then(function (response) {
+          setLoadingState(false);
+          if (response.data.status === "OK") {
+            dispatch(setIsLoggedIn(true));
+            dispatch(setLoadingState("init"));
+          } else {
+            setIsErrorMessage(true);
+            dispatch(setIsLoggedIn(false));
+          }
+        });
+    
   };
-  if (isLoggedIn) {
-    return <Redirect to="Home" />;
+  if (isLoggedIn && isDriver) {
+    return <Redirect to="/DriverHomeScreen" />;
+  }
+  else if(isLoggedIn && isRider){
+    return <Redirect to="/RiderHomeScreen" />;
+
   }
 
   //const [user ,setUser]=React.useState('');
   return (
     <div className="container">
       <h2>Login</h2>
-      <div>
-        <label>
-          Select your role:
-          <select onChange={(e) => dispatch(setRole(e.target.value))}>
-            <option value="Driver">Driver</option>
-            <option value="Rider">Rider</option>
-          </select>
-        </label>
+      <div class="select">
+        <select onChange={(e) => setRole(e.target.value)}>
+          <option value="0">Select Role</option>
+
+          <option value="driver">Driver</option>
+          <option value="rider">Rider</option>
+        </select>
       </div>
       <div>
         <input
           type="text"
           value={user}
           id="email"
-          placeholder="Email"
+          placeholder="UserName"
           onChange={(e) => dispatch(setUser(e.target.value))}
-          placeholder="Enter Email"
           name="uname"
           required
         />
@@ -75,12 +97,12 @@ const Login = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
       </div>
       <div>
         <button onClick={handleLogIn} id="login">
-          {" "}
           Log in
         </button>
       </div>
       <div className="isa_error">
         {isErrorMessage && <b> Email or Password is incorrect</b>}
+        {isErrorMessage && <b> {roleValidate}</b>}
       </div>
     </div>
   );
@@ -91,6 +113,8 @@ const mapStateToProps = (state) => {
     password: state.userReducer.password,
     isLoggedIn: state.userReducer.isLoggedIn,
     loadingState: state.userReducer.loadingState,
+    isDriver:state.userReducer.isDriver,
+    isRider:state.userReducer.isRider
   };
 };
 export default connect(mapStateToProps)(Login);

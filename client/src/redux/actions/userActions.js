@@ -14,17 +14,16 @@ export const setLoadingState=loadingState =>({
     type: 'USER_SET_LOADING_STATE',
     loadingState,
 });
-export const setEmail=email =>({
-    type: 'USER_SET_EMAIL',
-    email,
+export const setIsDriver=isDriver =>({
+    type: 'USER_SET_IS_DRIVER',
+    isDriver,
 });
-export const saveNote=note =>({
-    type: 'USER_SAVE_NOTE',
-    note,
+export const setIsRider=isRider =>({
+    type: 'USER_SET_IS_RIDER',
+    isRider,
 });
-export const showNoteList=noteList =>({
-    type: 'USER_SHOW_NOTE_LIST',
-    noteList,
-});
+
+
+
 
 //setUser('Hello')-->{type: 'USER_SET_USER', user:hello}
