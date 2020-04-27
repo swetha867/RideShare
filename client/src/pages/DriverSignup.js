@@ -9,13 +9,15 @@ const Signup = ({ loadingState, dispatch }) => {
   const [Dpassword, setPassword] = React.useState("");
   const [lic_no, setLicNo] = React.useState("");
   const [dname, setDname] = React.useState("");
+  const [carname, setCarName] = React.useState("");
+  const [carModel, setCarModel] = React.useState("");
   const [Driver_contact, setContact] = React.useState("");
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [responseMessage, setResponseMessage] = React.useState(false);
 
   const handleSignUp = () => {
     //  dispatch(setLoadingState("loading"));
-   const role='driver';
+    const role = "driver";
     const userData = {
       role,
       DuserName,
@@ -24,9 +26,31 @@ const Signup = ({ loadingState, dispatch }) => {
       lic_no,
       Driver_contact,
     };
+    const carData = {
+      carname,
+      carModel,
+    }
     //var headers = { 'Content-Type': 'application/json' }
     axios
       .post("/api/auth/Create", userData)
+      .then((response) => {
+        dispatch(setLoadingState("init"));
+        console.log(response);
+
+        if (response.data.valid) {
+          setResponseMessage(true);
+          setIsErrorMessage(false);
+        } else {
+          setResponseMessage(false);
+          setIsErrorMessage(true);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    axios
+      .post("/api/auth/carCreate", carData)
       .then((response) => {
         dispatch(setLoadingState("init"));
         console.log(response);
@@ -91,6 +115,24 @@ const Signup = ({ loadingState, dispatch }) => {
           placeholder="Contact"
           value={Driver_contact}
           onChange={(e) => setContact(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          value={carname}
+          id="carName"
+          placeholder="car name"
+          onChange={(e) => setCarName(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          value={carModel}
+          id="carModel"
+          placeholder="car Model"
+          onChange={(e) => setCarModel(e.target.value)}
         />
       </div>
       <div>
