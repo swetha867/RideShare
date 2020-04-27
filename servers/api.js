@@ -60,9 +60,10 @@ con.connect(function (err) {
           console.error("An error occurred while executing the query");
           res.send({ valid: false });
           throw error;
+        } else {
+          console.log("row inserted");
+          res.send({ valid: true });
         }
-        console.log("row inserted");
-        res.send({ valid: true });
       });
     }
   });
@@ -120,12 +121,28 @@ con.connect(function (err) {
     con.query(carValues, (err, res1) => {
       if (err) {
         console.log("Error");
-        res.send({ valid: true });
+        res.send({ valid: false });
       } else {
         console.log("row inserted");
         res.send({ valid: true });
       }
     });
   });
+
+  app.post("/api/postRide", (req, res) => {
+    const { toLocation, fromLocation } = req.body;
+    let trip = "insert into Trip (to_location, from_location) values (";
+    let tripValues = trip + `'${toLocation}', '${fromLocation}');`;
+    con.query(tripValues, (err, res1) => {
+      if (err) {
+        console.log("Error");
+        res.send({ status: false });
+      } else {
+        console.log("row inserted");
+        res.send({ status: true });
+      }
+    });
+  });
+
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 });

@@ -26,9 +26,24 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
 
   const counter = 0;
   const postRide = () => {
-   
+    const rideDetails = {
+      fromLocation,
+      toLocation,
+    };
+
+    axios
+      .post("/api/postRide", rideDetails)
+      .then((res) => {
+        if (res.data.status) {
+          console.log("ride is posted");
+        } else {
+          console.log("ride not posted");
+        }
+      })
+      .catch((e) => {
+        console.log("error");
+      });
   };
-  
 
   React.useEffect(() => {
     if (!isLoggedIn) {
@@ -67,6 +82,7 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
             <input
               type="text"
               id="fromLocation"
+              value={fromLocation}
               placeholder="Enter From Location"
               onChange={(e) => setFromLocation(e.target.value)}
             ></input>
@@ -75,6 +91,7 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
             <input
               type="text"
               id="toLocation"
+              value={toLocation}
               placeholder="Enter To Location"
               onChange={(e) => setToLocation(e.target.value)}
             ></input>
@@ -84,7 +101,7 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
               Post Ride
             </button>
           </div>
-         
+
           <div>{responseMessage}</div>
           {isLoggedIn && (
             <div class="logout">
