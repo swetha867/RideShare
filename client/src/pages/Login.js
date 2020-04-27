@@ -67,7 +67,7 @@ const Login = ({ user, password, isLoggedIn, loadingState, isDriver, isRider, di
   return (
     <div className="container">
       <h2>Login</h2>
-      <div class="select">
+      <div className="select">
         <select onChange={(e) => setRole(e.target.value)}>
           <option value="0">Select Role</option>
 

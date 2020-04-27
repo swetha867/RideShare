@@ -11,10 +11,15 @@ import {
 } from "../redux/actions/userActions";
 import { Redirect } from "react-router-dom";
 
-const DriverHomeScreen = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
-  
-
-  const [responseMessage, setResponseMessage] = React.useState("");
+const DriverHomeScreen = ({
+  user,
+  password,
+  isLoggedIn,
+  loadingState,
+  dispatch,
+}) => {
+  const [responseMessage, setResponseMessage] = React.useState([]);
+  const [response, setResponse] = React.useState("");
 
   const handleLogout = () => {
     dispatch(setIsLoggedIn(false));
@@ -25,9 +30,22 @@ const DriverHomeScreen = ({ user, password, isLoggedIn, loadingState, dispatch }
 
   const counter = 0;
   const showRides = () => {
-   
+    axios
+      .post("/api/showRides")
+      .then((res) => {
+        if (res.data.status) {
+          console.log("rides are displayed");
+          setResponseMessage(res.data.result);
+          setResponse(true);
+        } else {
+          console.log("Error is showrides");
+          setResponse(false);
+        }
+      })
+      .catch((e) => {
+        console.log("Error");
+      });
   };
-  
 
   React.useEffect(() => {
     if (!isLoggedIn) {
@@ -58,19 +76,22 @@ const DriverHomeScreen = ({ user, password, isLoggedIn, loadingState, dispatch }
 
   return (
     //if user is logged in, logout button appears in homepage and their notes are visible
-    <div class="container">
+    <div className="container">
       {isLoggedIn && (
         <div>
           <h2> Get Available Rides</h2>
           <div>
-              <button onClick={showRides} id="submit">
+            <button onClick={showRides} id="submit">
               Get available Rides
             </button>
           </div>
-         
-          <div>{responseMessage}</div>
+
+          <div>
+            {setResponse &&
+              responseMessage.map((res, index) => <div key={index}>{res.from_location}</div>)}
+          </div>
           {isLoggedIn && (
-            <div class="logout">
+            <div className="logout">
               <button onClick={handleLogout}>Logout</button>
             </div>
           )}
