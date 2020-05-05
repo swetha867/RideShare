@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
 import { connect } from "react-redux";
 import "./App.css";
 import "./rideShare.css";
@@ -10,19 +9,9 @@ import DriverHomeScreen from "./pages/DriverHomeScreen";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import {
-  setIsLoggedIn,
-  setIsDriver,
-  setIsRider,
-} from "./redux/actions/userActions";
 
 const App = (isLoggedIn, isDriver, isRider) => {
   const authenticated = isLoggedIn.isLoggedIn;
-  const driver = isDriver.isDriver;
-  const rider = false;
-  // const driver=true;
-  // const rider=isRider.isRider;
-  // alert(isLoggedIn.isLoggedIn);
 
   return (
     <div className="App">
@@ -32,16 +21,6 @@ const App = (isLoggedIn, isDriver, isRider) => {
             <div className="pill-nav">
               <Link to="/login">Login</Link>
               <Link to="/signUp">Signup</Link>
-            </div>
-          )}
-          {authenticated && rider && (
-            <div>
-              <Link to="/RiderHomeScreen">RIDER Home SCREEN</Link>
-            </div>
-          )}
-          {authenticated && driver && (
-            <div>
-              <Link to="/DriverHomeScreen">Driver Home SCREEN</Link>
             </div>
           )}
         </div>

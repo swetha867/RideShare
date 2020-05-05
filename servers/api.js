@@ -30,8 +30,6 @@ con.connect(function (err) {
         Driver_contact,
         DuserName,
         Dpassword,
-        carname,
-        carModel,
       } = req.body;
       let sql =
         "INSERT INTO driver (dname, lic_no, Driver_contact, Dusername, Dpassword) VALUES (";

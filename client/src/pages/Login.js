@@ -18,11 +18,6 @@ const Login = ({ user, password, isLoggedIn, loadingState, isDriver, isRider, di
   const [roleValidate, setRoleValidate] = React.useState("");
 
   const handleLogIn = () => {
-    /*if (role != "rider" || role != "driver") {
-      setRoleValidate("Please select role");
-      setIsErrorMessage(true);
-
-    } else {*/
       if(role === "driver"){
         dispatch(setIsDriver(true));
         dispatch(setIsRider(false));
@@ -55,15 +50,17 @@ const Login = ({ user, password, isLoggedIn, loadingState, isDriver, isRider, di
         });
     
   };
+
   if (isLoggedIn && isDriver) {
+    console.log(isDriver);
     return <Redirect to="/DriverHomeScreen" />;
   }
   else if(isLoggedIn && isRider){
+    console.log(isRider);
     return <Redirect to="/RiderHomeScreen" />;
 
   }
 
-  //const [user ,setUser]=React.useState('');
   return (
     <div className="container">
       <h2>Login</h2>

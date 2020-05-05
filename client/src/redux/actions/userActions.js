@@ -22,6 +22,10 @@ export const setIsRider=isRider =>({
     type: 'USER_SET_IS_RIDER',
     isRider,
 });
+export const setAcceptRide=acceptRide =>({
+    type: 'USER_SET_ACCEPT_RIDE',
+    acceptRide,
+});
 
 
 

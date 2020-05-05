@@ -2,12 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import "../rideShare.css";
 import axios from "axios";
+import "../App.css";
 
 import {
   setUser,
   setPassword,
   setIsLoggedIn,
   setLoadingState,
+  setAcceptRide,
 } from "../redux/actions/userActions";
 import { Redirect } from "react-router-dom";
 
@@ -17,6 +19,7 @@ const DriverHomeScreen = ({
   isLoggedIn,
   loadingState,
   dispatch,
+  acceptRide,
 }) => {
   const [responseMessage, setResponseMessage] = React.useState([]);
   const [response, setResponse] = React.useState("");
@@ -29,6 +32,9 @@ const DriverHomeScreen = ({
   };
 
   const counter = 0;
+  const selectRide = () => {
+    console.log("ride selected");
+  }
   const showRides = () => {
     axios
       .post("/api/showRides")
@@ -37,6 +43,9 @@ const DriverHomeScreen = ({
           console.log("rides are displayed");
           setResponseMessage(res.data.result);
           setResponse(true);
+          if(acceptRide==="acceptReq"){
+            console.log("requested");
+          }
         } else {
           console.log("Error is showrides");
           setResponse(false);
@@ -47,32 +56,32 @@ const DriverHomeScreen = ({
       });
   };
 
-  React.useEffect(() => {
-    if (!isLoggedIn) {
-      //making a call to auth server to check if the user is logged in.
-      const loginData = {
-        user,
-        password,
-      };
-      dispatch(setLoadingState("loading"));
-      setTimeout(() => {
-        axios
-          .post("/api/auth/authenticate", { loginData })
-          .then(function (response) {
-            setLoadingState(false);
+  // React.useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     //making a call to auth server to check if the user is logged in.
+  //     const loginData = {
+  //       user,
+  //       password,
+  //     };
+  //     dispatch(setLoadingState("loading"));
+  //     setTimeout(() => {
+  //       axios
+  //         .post("/api/auth/authenticate", { loginData })
+  //         .then(function (response) {
+  //           setLoadingState(false);
 
-            if (response.data.status === "OK") {
-              dispatch(setIsLoggedIn(true));
-              dispatch(setLoadingState("init"));
-              //Save token as cookie
-              // setCookie('authToken', response.data.token, { path: '/' });
-            } else {
-              dispatch(setIsLoggedIn(false));
-            }
-          });
-      }, 4000);
-    }
-  });
+  //           if (response.data.status === "OK") {
+  //             dispatch(setIsLoggedIn(true));
+  //             dispatch(setLoadingState("init"));
+  //             //Save token as cookie
+  //             // setCookie('authToken', response.data.token, { path: '/' });
+  //           } else {
+  //             dispatch(setIsLoggedIn(false));
+  //           }
+  //         });
+  //     },);
+  //   }
+  // });
 
   return (
     //if user is logged in, logout button appears in homepage and their notes are visible
@@ -88,7 +97,12 @@ const DriverHomeScreen = ({
 
           <div>
             {setResponse &&
-              responseMessage.map((res, index) => <div key={index}>{res.from_location}</div>)}
+              responseMessage.map((res, index) => 
+              <div key={index} className="d-flex" >
+                {res.from_location}
+                <button onClick={selectRide} className="button d-flex" >Accept</button>
+                <button onClick={selectRide} className="button d-flex" >Reject</button>
+              </div>)} 
           </div>
           {isLoggedIn && (
             <div className="logout">
@@ -107,6 +121,7 @@ const mapStateToProps = (state) => {
     password: state.userReducer.password,
     isLoggedIn: state.userReducer.isLoggedIn,
     loadingState: state.userReducer.loadingState,
+    acceptRide: state.userReducer.acceptRide,
   };
 };
 export default connect(mapStateToProps)(DriverHomeScreen);
