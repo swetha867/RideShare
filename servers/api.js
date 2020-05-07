@@ -24,27 +24,17 @@ con.connect(function (err) {
 
   app.post("/api/auth/Create", (req, res) => {
     if (req.body.role == "driver") {
-      const {
-        dname,
-        lic_no,
-        Driver_contact,
-        DuserName,
-        Dpassword,
-        carname,
-        carModel,
-      } = req.body;
+      const { dname, lic_no, Driver_contact, DuserName, Dpassword } = req.body;
       let sql =
         "INSERT INTO driver (dname, lic_no, Driver_contact, Dusername, Dpassword) VALUES (";
       let values =
         sql +
         `'${dname}', '${lic_no}', '${Driver_contact}', '${DuserName}', '${Dpassword}');`;
-      console.log(values);
       con.query(values, (err, result) => {
         if (err) {
           console.log("error");
           res.send({ valid: false });
         } else {
-          console.log("row inserted");
           res.send({ valid: true });
         }
       });
@@ -54,14 +44,12 @@ con.connect(function (err) {
         "INSERT INTO rider (Rusername, Rpassword, Rname, Rider_contact) VALUES (";
       let sqlQuery =
         sql + `'${RuserName}', '${Rpassword}', '${Rname}', '${Rider_contact}')`;
-      console.log(sqlQuery);
       con.query(sqlQuery, (error, results, fields) => {
         if (error) {
           console.error("An error occurred while executing the query");
           res.send({ valid: false });
           throw error;
         } else {
-          console.log("row inserted");
           res.send({ valid: true });
         }
       });
@@ -70,17 +58,14 @@ con.connect(function (err) {
 
   app.post("/api/auth/authenticate", (req, res) => {
     const { role, user, password } = req.body.loginData;
-    console.log(role, user, password);
     if (role == "rider") {
       var sql =
         "SELECT * FROM rider WHERE RuserName = " +
         `'${user}'` +
         "AND Rpassword =" +
         `'${password}'`;
-      console.log(sql);
       con.query(sql, function (err, result) {
         try {
-          console.log(result.length);
           if (result.length > 0) {
             res.send({ status: "OK" });
           } else {
@@ -93,16 +78,14 @@ con.connect(function (err) {
       });
     } else if (role == "driver") {
       var sql =
-        "SELECT * FROM driver WHERE DuserName = " +
+        "SELECT did FROM driver WHERE DuserName = " +
         `'${user}'` +
         "AND Dpassword =" +
         `'${password}'`;
-      console.log(sql);
       con.query(sql, function (err, result) {
         try {
-          console.log(result.length);
           if (result.length > 0) {
-            res.send({ status: "OK" });
+            res.send({ status: "OK", didStatus: "true", did: result });
           } else {
             res.send({ status: "error" });
           }
@@ -115,15 +98,14 @@ con.connect(function (err) {
   });
 
   app.post("/api/auth/carCreate", (req, res) => {
-    const { carModel, carname } = req.body;
-    let carSql = "insert into car (color, model) values (";
-    let carValues = carSql + `'${carname}', '${carModel}');`;
+    const { carModel, carname, lic_no } = req.body;
+    let carSql = "insert into car (cid, color, model) values (";
+    let carValues = carSql + `'${lic_no}', '${carname}', '${carModel}');`;
     con.query(carValues, (err, res1) => {
       if (err) {
         console.log("Error");
         res.send({ valid: false });
       } else {
-        console.log("row inserted");
         res.send({ valid: true });
       }
     });
@@ -138,25 +120,39 @@ con.connect(function (err) {
         console.log("Error");
         res.send({ status: false });
       } else {
-        console.log("row inserted");
         res.send({ status: true });
       }
     });
   });
 
-  app.post("/api/showRides", (req,res) => {
-    let rides = "select from_location from trip;"
+  app.post("/api/showRides", (req, res) => {
+    let rides =
+      "select from_location, tid from trip where tid not in( select tid from gets);";
     con.query(rides, (err, res1) => {
-      if(err){
+      if (err) {
         console.log("error");
-        res.send({status:false});
+        res.send({ status: false });
+      } else if (res1.length === 0) {
+        res.send({ status: true, empty: true });
+      } else {
+        res.send({ status: true, result: res1 });
       }
-      else{
+    });
+  });
+
+  app.post("/api/rideSelect", (req, res) => {
+    const { did, tid, accepts, rejects } = req.body;
+    let rides = `insert into gets (did, tid, accepts, rejects) values ('${did}', '${tid}', '${accepts}', '${rejects}');`;
+    con.query(rides, (err, res1) => {
+      if (err) {
+        console.log("error");
+        res.send({ status: false });
+      } else {
         console.log(res1);
-        res.send({status: true, result: res1});
+        res.send({ status: true });
       }
-    })
-  })
+    });
+  });
 
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 });

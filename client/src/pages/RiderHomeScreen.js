@@ -8,10 +8,11 @@ import {
   setPassword,
   setIsLoggedIn,
   setLoadingState,
+  setAcceptRide,
 } from "../redux/actions/userActions";
 import { Redirect } from "react-router-dom";
 
-const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
+const Home = ({ user, password, isLoggedIn, loadingState, dispatch, acceptRide }) => {
   const [fromLocation, setFromLocation] = React.useState("");
   const [toLocation, setToLocation] = React.useState("");
 
@@ -37,6 +38,7 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch }) => {
         if (res.data.status) {
           console.log("ride is posted");
           setResponseMessage("Ride is posted");
+          dispatch(setAcceptRide('acceptReq'));
         } else {
           console.log("ride not posted");
           setResponseMessage("Ride is not posted");
@@ -122,6 +124,7 @@ const mapStateToProps = (state) => {
     password: state.userReducer.password,
     isLoggedIn: state.userReducer.isLoggedIn,
     loadingState: state.userReducer.loadingState,
+    acceptRide: state.userReducer.acceptRide,
   };
 };
 export default connect(mapStateToProps)(Home);

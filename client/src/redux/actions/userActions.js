@@ -2,6 +2,10 @@ export const setUser=user =>({
     type: 'USER_SET_USER',
     user,
 });
+export const setDriverId=driverId =>({
+    type: 'USER_SET_DRIVER_ID',
+    driverId,
+});
 export const setPassword=password =>({
     type: 'USER_SET_PASSWORD',
     password,
@@ -21,6 +25,10 @@ export const setIsDriver=isDriver =>({
 export const setIsRider=isRider =>({
     type: 'USER_SET_IS_RIDER',
     isRider,
+});
+export const setAcceptRide=acceptRide =>({
+    type: 'USER_SET_ACCEPT_RIDE',
+    acceptRide,
 });
 
 
