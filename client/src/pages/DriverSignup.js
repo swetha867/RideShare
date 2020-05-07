@@ -29,6 +29,7 @@ const Signup = ({ loadingState, dispatch }) => {
     const carData = {
       carname,
       carModel,
+      lic_no,
     }
     //var headers = { 'Content-Type': 'application/json' }
     axios

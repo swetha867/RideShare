@@ -2,6 +2,10 @@ export const setUser=user =>({
     type: 'USER_SET_USER',
     user,
 });
+export const setDriverId=driverId =>({
+    type: 'USER_SET_DRIVER_ID',
+    driverId,
+});
 export const setPassword=password =>({
     type: 'USER_SET_PASSWORD',
     password,

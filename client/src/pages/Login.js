@@ -8,57 +8,63 @@ import {
   setLoadingState,
   setIsDriver,
   setIsRider,
+  setDriverId,
 } from "../redux/actions/userActions";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 
-const Login = ({ user, password, isLoggedIn, loadingState, isDriver, isRider, dispatch }) => {
+const Login = ({
+  user,
+  password,
+  isLoggedIn,
+  loadingState,
+  isDriver,
+  isRider,
+  dispatch,
+}) => {
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [role, setRole] = React.useState("");
   const [roleValidate, setRoleValidate] = React.useState("");
 
   const handleLogIn = () => {
-      if(role === "driver"){
-        dispatch(setIsDriver(true));
-        dispatch(setIsRider(false));
+    if (role === "driver") {
+      dispatch(setIsDriver(true));
+      dispatch(setIsRider(false));
+    } else {
+      dispatch(setIsRider(true));
+      dispatch(setIsDriver(false));
+    }
+    setRoleValidate("");
+    setIsErrorMessage(false);
+    const loginData = {
+      role,
+      user,
+      password,
+    };
 
-      }
-      else{
-        dispatch(setIsRider(true));
-        dispatch(setIsDriver(false));
-      }
-      setRoleValidate("");
-      setIsErrorMessage(false);
-      const loginData = {
-        role,
-        user,
-        password,
-      };
-     
-      dispatch(setLoadingState("loading"));
-      axios
-        .post("/api/auth/authenticate", { loginData })
-        .then(function (response) {
-          setLoadingState(false);
-          if (response.data.status === "OK") {
-            dispatch(setIsLoggedIn(true));
-            dispatch(setLoadingState("init"));
-          } else {
-            setIsErrorMessage(true);
-            dispatch(setIsLoggedIn(false));
+    dispatch(setLoadingState("loading"));
+    axios
+      .post("/api/auth/authenticate", { loginData })
+      .then(function (response) {
+        setLoadingState(false);
+        if (response.data.status === "OK") {
+          dispatch(setIsLoggedIn(true));
+          dispatch(setLoadingState("init"));
+          if (response.data.didStatus) {
+            dispatch(setDriverId(response.data.did[0].did));
           }
-        });
-    
+        } else {
+          setIsErrorMessage(true);
+          dispatch(setIsLoggedIn(false));
+        }
+      });
   };
 
   if (isLoggedIn && isDriver) {
-    console.log(isDriver);
     return <Redirect to="/DriverHomeScreen" />;
-  }
-  else if(isLoggedIn && isRider){
+  } else if (isLoggedIn && isRider) {
     console.log(isRider);
     return <Redirect to="/RiderHomeScreen" />;
-
   }
 
   return (
@@ -110,8 +116,8 @@ const mapStateToProps = (state) => {
     password: state.userReducer.password,
     isLoggedIn: state.userReducer.isLoggedIn,
     loadingState: state.userReducer.loadingState,
-    isDriver:state.userReducer.isDriver,
-    isRider:state.userReducer.isRider
+    isDriver: state.userReducer.isDriver,
+    isRider: state.userReducer.isRider,
   };
 };
 export default connect(mapStateToProps)(Login);

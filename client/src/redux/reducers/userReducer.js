@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   isDriver: false,
   isRider: false,
   acceptRide: "",
+  driverId: "",
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -15,6 +16,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         user: action.user,
+      };
+    case "USER_SET_DRIVER_ID":
+      return {
+        ...state,
+        driverId: action.driverId,
       };
     case "USER_SET_ACCEPT_RIDE":
       return {

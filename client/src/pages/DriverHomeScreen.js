@@ -9,7 +9,6 @@ import {
   setPassword,
   setIsLoggedIn,
   setLoadingState,
-  setAcceptRide,
 } from "../redux/actions/userActions";
 import { Redirect } from "react-router-dom";
 
@@ -19,10 +18,11 @@ const DriverHomeScreen = ({
   isLoggedIn,
   loadingState,
   dispatch,
-  acceptRide,
+  driverId,
 }) => {
   const [responseMessage, setResponseMessage] = React.useState([]);
   const [response, setResponse] = React.useState("");
+  const [status, setStatus] = React.useState("");
 
   const handleLogout = () => {
     dispatch(setIsLoggedIn(false));
@@ -31,20 +31,17 @@ const DriverHomeScreen = ({
     console.log("isLoggedin in logout", isLoggedIn);
   };
 
-  const counter = 0;
-  const selectRide = () => {
-    console.log("ride selected");
-  }
   const showRides = () => {
     axios
       .post("/api/showRides")
       .then((res) => {
         if (res.data.status) {
-          console.log("rides are displayed");
-          setResponseMessage(res.data.result);
-          setResponse(true);
-          if(acceptRide==="acceptReq"){
-            console.log("requested");
+          if (res.data.empty) {
+            setStatus("empty");
+          } else {
+            setResponseMessage(res.data.result);
+            setResponse(true);
+            setStatus("");
           }
         } else {
           console.log("Error is showrides");
@@ -56,32 +53,32 @@ const DriverHomeScreen = ({
       });
   };
 
-  // React.useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     //making a call to auth server to check if the user is logged in.
-  //     const loginData = {
-  //       user,
-  //       password,
-  //     };
-  //     dispatch(setLoadingState("loading"));
-  //     setTimeout(() => {
-  //       axios
-  //         .post("/api/auth/authenticate", { loginData })
-  //         .then(function (response) {
-  //           setLoadingState(false);
-
-  //           if (response.data.status === "OK") {
-  //             dispatch(setIsLoggedIn(true));
-  //             dispatch(setLoadingState("init"));
-  //             //Save token as cookie
-  //             // setCookie('authToken', response.data.token, { path: '/' });
-  //           } else {
-  //             dispatch(setIsLoggedIn(false));
-  //           }
-  //         });
-  //     },);
-  //   }
-  // });
+  const rideSelect = (location, tid, acc, rej) => {
+    console.log(`${location}, ${tid}, ${acc}, ${rej}`);
+    const body = {
+      did: driverId,
+      tid: tid,
+      accepts: acc,
+      rejects: rej,
+    };
+    axios
+      .post("/api/rideSelect", body)
+      .then((res) => {
+        if (res.data.status) {
+          if (acc === "1") {
+            setStatus("accepted");
+          } else if (rej === "1") {
+            setStatus("rejected");
+          }
+        } else {
+          console.log("Error in accepting ride");
+          setStatus("");
+        }
+      })
+      .catch((e) => {
+        console.log("Error");
+      });
+  };
 
   return (
     //if user is logged in, logout button appears in homepage and their notes are visible
@@ -94,16 +91,48 @@ const DriverHomeScreen = ({
               Get available Rides
             </button>
           </div>
-
           <div>
             {setResponse &&
-              responseMessage.map((res, index) => 
-              <div key={index} className="d-flex" >
-                {res.from_location}
-                <button onClick={selectRide} className="button d-flex" >Accept</button>
-                <button onClick={selectRide} className="button d-flex" >Reject</button>
-              </div>)} 
+              responseMessage.map((res, index) => (
+                <div key={index} className="d-flex">
+                  {res.from_location}
+                  <button
+                    name={res.from_location}
+                    onClick={() => {
+                      let accepts = "1";
+                      let rejects = "0";
+                      return rideSelect(
+                        res.from_location,
+                        res.tid,
+                        accepts,
+                        rejects
+                      );
+                    }}
+                    className="button d-flex"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onClick={() => {
+                      let accepts = "0";
+                      let rejects = "1";
+                      return rideSelect(
+                        res.from_location,
+                        res.tid,
+                        accepts,
+                        rejects
+                      );
+                    }}
+                    className="button d-flex"
+                  >
+                    Reject
+                  </button>
+                </div>
+              ))}
           </div>
+          {status === "accepted" && <b>Ride is accepted</b>}
+          {status === "rejected" && <b>Ride is rejected</b>}
+          {status === "empty" && <b>No available rides to display</b>}
           {isLoggedIn && (
             <div className="logout">
               <button onClick={handleLogout}>Logout</button>
@@ -121,7 +150,7 @@ const mapStateToProps = (state) => {
     password: state.userReducer.password,
     isLoggedIn: state.userReducer.isLoggedIn,
     loadingState: state.userReducer.loadingState,
-    acceptRide: state.userReducer.acceptRide,
+    driverId: state.userReducer.driverId,
   };
 };
 export default connect(mapStateToProps)(DriverHomeScreen);
