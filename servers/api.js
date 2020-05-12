@@ -154,5 +154,19 @@ con.connect(function (err) {
     });
   });
 
+  app.post("/api/ridesHistory", (req, res) => {
+    const { did } = req.body;
+    let rides =
+      `select r.rusername from rider r, pays p where r.rid=p.rid group by p.did,r.rid having p.did=${did};`;
+    con.query(rides, (err, res1) => {
+      if (err) {
+        console.log("error");
+        res.send({ status: false });
+      } else {
+        res.send({ status: true, result: res1 });
+      }
+    });
+  });
+
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 });

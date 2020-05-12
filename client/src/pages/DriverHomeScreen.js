@@ -23,7 +23,8 @@ const DriverHomeScreen = ({
   const [responseMessage, setResponseMessage] = React.useState([]);
   const [response, setResponse] = React.useState("");
   const [status, setStatus] = React.useState("");
-
+  const [historyStat, setHistoryStat] = React.useState("");
+  const [history, setHistory] = React.useState();
   const handleLogout = () => {
     dispatch(setIsLoggedIn(false));
     dispatch(setUser(""));
@@ -40,12 +41,13 @@ const DriverHomeScreen = ({
             setStatus("empty");
           } else {
             setResponseMessage(res.data.result);
-            setResponse(true);
+            setResponse("true");
             setStatus("");
+            setHistoryStat("");
           }
         } else {
           console.log("Error is showrides");
-          setResponse(false);
+          setResponse("false");
         }
       })
       .catch((e) => {
@@ -80,6 +82,33 @@ const DriverHomeScreen = ({
       });
   };
 
+  const RidesHistory = () => {
+    const body = {
+      did: driverId,
+    };
+    axios
+      .post("/api/ridesHistory", body)
+      .then((res) => {
+        if (res.data.status) {
+          let result = res.data.result;
+          setHistory(result);
+          setHistoryStat("true");
+          setResponse("");
+          if (result.length === 0) {
+            setHistoryStat("empty");
+            setResponse("");
+          }
+        } else {
+          console.log("Error is rides history");
+          setResponse("");
+          setHistoryStat("error");
+        }
+      })
+      .catch((e) => {
+        console.log("Error");
+      });
+  };
+
   return (
     //if user is logged in, logout button appears in homepage and their notes are visible
     <div className="container">
@@ -92,7 +121,19 @@ const DriverHomeScreen = ({
             </button>
           </div>
           <div>
-            {setResponse &&
+            <button onClick={RidesHistory}>Rides History</button>
+          </div>
+          {historyStat === "true" && (
+            <div>
+              <b>Your previous rides:</b>
+              {history.map((values, index) => (
+                <div key={index}>{values.rusername}</div>
+              ))}
+            </div>
+          )}
+          {historyStat === "empty" && <div>You have no rides history</div>}
+          <div>
+            {response === "true" &&
               responseMessage.map((res, index) => (
                 <div key={index} className="d-flex">
                   {res.from_location}
