@@ -6,6 +6,10 @@ export const setDriverId=driverId =>({
     type: 'USER_SET_DRIVER_ID',
     driverId,
 });
+export const setRiderId=riderId =>({
+    type: 'USER_SET_RIDER_ID',
+    riderId,
+});
 export const setPassword=password =>({
     type: 'USER_SET_PASSWORD',
     password,
@@ -34,4 +38,3 @@ export const setAcceptRide=acceptRide =>({
 
 
 
-//setUser('Hello')-->{type: 'USER_SET_USER', user:hello}

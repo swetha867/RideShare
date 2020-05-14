@@ -1,12 +1,10 @@
 import React from "react";
-import { connect } from "react-redux";
 import "../App.css";
 import "../rideShare.css";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import DriverSignup from "./DriverSignup";
 import RiderSignup from "./RiderSignup";
-import { Redirect } from "react-router-dom";
 
 const Signup = () => {
   return (

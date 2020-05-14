@@ -9,6 +9,8 @@ import {
   setIsDriver,
   setIsRider,
   setDriverId,
+  setRiderId,
+
 } from "../redux/actions/userActions";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
@@ -21,6 +23,7 @@ const Login = ({
   isDriver,
   isRider,
   dispatch,
+  riderId
 }) => {
   const [isErrorMessage, setIsErrorMessage] = React.useState(false);
   const [role, setRole] = React.useState("");
@@ -52,6 +55,12 @@ const Login = ({
           dispatch(setLoadingState("init"));
           if (response.data.didStatus) {
             dispatch(setDriverId(response.data.did[0].did));
+          }
+          if(role==="rider"){
+            console.log("riderId"+response.data.rid);
+
+            dispatch(setRiderId(response.data.rid))
+
           }
         } else {
           setIsErrorMessage(true);
@@ -104,7 +113,7 @@ const Login = ({
         </button>
       </div>
       <div className="isa_error">
-        {isErrorMessage && <b> Email or Password is incorrect</b>}
+        {isErrorMessage && <b> The Email and/or Password you specified are not correct</b>}
         {isErrorMessage && <b> {roleValidate}</b>}
       </div>
     </div>
@@ -118,6 +127,8 @@ const mapStateToProps = (state) => {
     loadingState: state.userReducer.loadingState,
     isDriver: state.userReducer.isDriver,
     isRider: state.userReducer.isRider,
+    riderId: state.userReducer.riderId,
+
   };
 };
 export default connect(mapStateToProps)(Login);
