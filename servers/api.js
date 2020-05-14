@@ -9,10 +9,10 @@ app.use(express.json());
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  // password: "password",
-  // database: "rideshare",
-  password: "Login@12345",
-  database: "Final_project",
+ password: "password",
+   database: "rideshare",
+ // password: "Login@12345",
+  //database: "Final_project",
 });
 
 con.connect(function (err) {
@@ -120,14 +120,22 @@ con.connect(function (err) {
         console.log("Error");
         res.send({ status: false });
       } else {
+      //  let tid=res1.insertId;
+       // let books = "insert into books (Tid, Rid) values (";
+        //et bookValues = books + `'${tid}', '${riderId}');`;
+        //con.query(bookValues, (err, res2) => {
+        // console.log(err);
         res.send({ status: true });
-      }
+       
+      //})
+    }
     });
   });
 
+
   app.post("/api/showRides", (req, res) => {
     let rides =
-      "select from_location, tid from trip where tid not in( select tid from gets);";
+      "select from_location, to_location, tid from trip where tid not in( select tid from gets);";
     con.query(rides, (err, res1) => {
       if (err) {
         console.log("error");
@@ -142,19 +150,29 @@ con.connect(function (err) {
 
   app.post("/api/rideSelect", (req, res) => {
     const { did, tid, accepts, rejects } = req.body;
+    let start_time=new Date().toISOString().slice(0, 19).replace('T', ' ');
+    console.log(start_time);
+    let trip = `UPDATE trip
+    SET Start_time="${start_time}"
+    WHERE Tid="${tid}";`;
     let rides = `insert into gets (did, tid, accepts, rejects) values ('${did}', '${tid}', '${accepts}', '${rejects}');`;
     con.query(rides, (err, res1) => {
       if (err) {
         console.log("error");
         res.send({ status: false });
       } else {
-        console.log(res1);
+        con.query(trip, (err, res1) => {
+          console.log(trip)
+          if(err){
+            console.log(error);
+          }
+        });
         res.send({ status: true });
       }
     });
   });
 
-  app.post("/api/ridesHistory", (req, res) => {
+  app.post("/api/driverridesHistory", (req, res) => {
     const { did } = req.body;
     let rides =
       `select r.rusername from rider r, pays p where r.rid=p.rid group by p.did,r.rid having p.did=${did};`;
@@ -166,7 +184,50 @@ con.connect(function (err) {
         res.send({ status: true, result: res1 });
       }
     });
+    app.post("/api/bookRide", (req, res) => {
+      const {  tid, rid } = req.body;
+      let books = `insert into books ( tid, rid) values ('${tid}', '${rid}');`;
+      con.query(books, (err, res1) => {
+        if (err) {
+          console.log("error");
+          res.send({ status: false });
+        } else {
+          console.log(res1);
+          res.send({ status: true });
+        }
+      });
+    });
+    app.post("/api/getRidesByID", (req, res) => {
+      const { did, tid, accepts, rejects } = req.body;
+      let rides = `insert into gets (did, tid, accepts, rejects) values ('${did}', '${tid}', '${accepts}', '${rejects}');`;
+      con.query(rides, (err, res1) => {
+        if (err) {
+          console.log("error");
+          res.send({ status: false });
+        } else {
+          console.log(res1);
+          res.send({ status: true });
+        }
+      });
+    });
   });
+  app.post("/api/endRide", (req, res) => {
+ // const {tid} = req.body.tid;
+  let  fare=Math.floor(Math.random() * 100) + 20; // returns a random integer from 1 to 100
+    let trip = `UPDATE trip
+    SET trip_fare="${fare}"
+    WHERE Tid="${ req.body.tid}";`;
+  console.log(trip);
+    con.query(trip, (err, res1) => {
+      if (err) {
+        console.log(err);
+        res.send({ status: false });
+      } else {
+        res.send({ status: "OK" ,fare:fare});
+      }
+    });
+  });
+
 
   app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 });

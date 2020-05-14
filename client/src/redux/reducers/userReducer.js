@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   isRider: false,
   acceptRide: "",
   driverId: "",
+  riderId:""
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -22,6 +23,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         driverId: action.driverId,
       };
+      case "USER_SET_RIDERID_ID":
+      return {
+        ...state,
+        riderId: action.riderId,
+      };
+      
     case "USER_SET_ACCEPT_RIDE":
       return {
         ...state,

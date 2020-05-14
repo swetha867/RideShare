@@ -10,9 +10,8 @@ import {
   setLoadingState,
   setAcceptRide,
 } from "../redux/actions/userActions";
-import { Redirect } from "react-router-dom";
 
-const Home = ({ user, password, isLoggedIn, loadingState, dispatch, acceptRide }) => {
+const Home = ({ user, password, isLoggedIn, loadingState, dispatch, acceptRide ,riderId}) => {
   const [fromLocation, setFromLocation] = React.useState("");
   const [toLocation, setToLocation] = React.useState("");
 
@@ -24,14 +23,16 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch, acceptRide }
     dispatch(setPassword(""));
     console.log("isLoggedin in logout", isLoggedIn);
   };
-
+  const getRides = () => {
+  }
   const counter = 0;
   const postRide = () => {
     const rideDetails = {
       fromLocation,
       toLocation,
+      riderId
     };
-
+console.log(riderId+"Rider id")
     axios
       .post("/api/postRide", rideDetails)
       .then((res) => {
@@ -77,10 +78,26 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch, acceptRide }
   });
 
   return (
-    //if user is logged in, logout button appears in homepage and their notes are visible
     <div className="container">
       {isLoggedIn && (
+
         <div>
+          <div>
+           {isLoggedIn && (
+            <div class="navbar">
+               <a href="#" class="active">
+            HOME </a>
+          
+            <div class="logout">
+              <a onClick={handleLogout} className="right">LOGOUT</a>
+            </div>
+            </div>
+            
+           
+          )}
+           </div>
+           {isLoggedIn && (
+             <div>
           <h2> Post your Ride</h2>
           <div>
             <input
@@ -105,13 +122,11 @@ const Home = ({ user, password, isLoggedIn, loadingState, dispatch, acceptRide }
               Post Ride
             </button>
           </div>
+          </div>
+)}
 
           <div>{responseMessage}</div>
-          {isLoggedIn && (
-            <div className="logout">
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          )}
+         
         </div>
       )}
     </div>
@@ -125,6 +140,8 @@ const mapStateToProps = (state) => {
     isLoggedIn: state.userReducer.isLoggedIn,
     loadingState: state.userReducer.loadingState,
     acceptRide: state.userReducer.acceptRide,
+    riderId: state.userReducer.riderId,
+
   };
 };
 export default connect(mapStateToProps)(Home);
